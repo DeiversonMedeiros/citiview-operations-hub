@@ -1,12 +1,29 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { ArchitectureHeader } from "@/components/architecture/ArchitectureHeader";
+import { ArchitecturePattern } from "@/components/architecture/ArchitecturePattern";
+import { NamingConventions } from "@/components/architecture/NamingConventions";
+import { DataModel } from "@/components/architecture/DataModel";
+import { ModuleSchemas } from "@/components/architecture/ModuleSchemas";
+import { LayerOrganization } from "@/components/architecture/LayerOrganization";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <ArchitectureHeader />
+      <main>
+        <ArchitecturePattern />
+        <NamingConventions />
+        <LayerOrganization />
+        <DataModel />
+        <ModuleSchemas />
+      </main>
+      
+      <footer className="py-8 border-t border-border/50 bg-muted/30">
+        <div className="container text-center">
+          <p className="text-sm text-muted-foreground">
+            CitiView ERP • Arquitetura Base v1.0
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
