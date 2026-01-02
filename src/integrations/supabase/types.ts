@@ -50,6 +50,8 @@ export type Database = {
     }
     Functions: {
       get_user_cliente_id: { Args: never; Returns: string }
+      get_user_empresas: { Args: never; Returns: string[] }
+      has_empresa_access: { Args: { p_empresa_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
