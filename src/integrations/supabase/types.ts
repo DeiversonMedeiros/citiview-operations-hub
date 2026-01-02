@@ -42,11 +42,247 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_roles_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
-      [_ in never]: never
+      clientes: {
+        Row: {
+          atualizado_em: string | null
+          cnpj: string | null
+          codigo: string | null
+          criado_em: string | null
+          criado_por: string | null
+          data_contrato: string | null
+          email: string | null
+          endereco_bairro: string | null
+          endereco_cep: string | null
+          endereco_cidade: string | null
+          endereco_complemento: string | null
+          endereco_logradouro: string | null
+          endereco_numero: string | null
+          endereco_uf: string | null
+          id: string | null
+          nome_fantasia: string | null
+          razao_social: string | null
+          status: "ativo" | "inativo" | "suspenso" | null
+          telefone: string | null
+        }
+        Insert: {
+          atualizado_em?: string | null
+          cnpj?: string | null
+          codigo?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          data_contrato?: string | null
+          email?: string | null
+          endereco_bairro?: string | null
+          endereco_cep?: string | null
+          endereco_cidade?: string | null
+          endereco_complemento?: string | null
+          endereco_logradouro?: string | null
+          endereco_numero?: string | null
+          endereco_uf?: string | null
+          id?: string | null
+          nome_fantasia?: string | null
+          razao_social?: string | null
+          status?: "ativo" | "inativo" | "suspenso" | null
+          telefone?: string | null
+        }
+        Update: {
+          atualizado_em?: string | null
+          cnpj?: string | null
+          codigo?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          data_contrato?: string | null
+          email?: string | null
+          endereco_bairro?: string | null
+          endereco_cep?: string | null
+          endereco_cidade?: string | null
+          endereco_complemento?: string | null
+          endereco_logradouro?: string | null
+          endereco_numero?: string | null
+          endereco_uf?: string | null
+          id?: string | null
+          nome_fantasia?: string | null
+          razao_social?: string | null
+          status?: "ativo" | "inativo" | "suspenso" | null
+          telefone?: string | null
+        }
+        Relationships: []
+      }
+      empresas: {
+        Row: {
+          atualizado_em: string | null
+          cliente_id: string | null
+          cnpj: string | null
+          codigo: string | null
+          criado_em: string | null
+          criado_por: string | null
+          email: string | null
+          endereco_bairro: string | null
+          endereco_cep: string | null
+          endereco_cidade: string | null
+          endereco_complemento: string | null
+          endereco_logradouro: string | null
+          endereco_numero: string | null
+          endereco_uf: string | null
+          id: string | null
+          inscricao_estadual: string | null
+          inscricao_municipal: string | null
+          nome_fantasia: string | null
+          razao_social: string | null
+          status: "ativo" | "inativo" | "suspenso" | null
+          telefone: string | null
+        }
+        Insert: {
+          atualizado_em?: string | null
+          cliente_id?: string | null
+          cnpj?: string | null
+          codigo?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          email?: string | null
+          endereco_bairro?: string | null
+          endereco_cep?: string | null
+          endereco_cidade?: string | null
+          endereco_complemento?: string | null
+          endereco_logradouro?: string | null
+          endereco_numero?: string | null
+          endereco_uf?: string | null
+          id?: string | null
+          inscricao_estadual?: string | null
+          inscricao_municipal?: string | null
+          nome_fantasia?: string | null
+          razao_social?: string | null
+          status?: "ativo" | "inativo" | "suspenso" | null
+          telefone?: string | null
+        }
+        Update: {
+          atualizado_em?: string | null
+          cliente_id?: string | null
+          cnpj?: string | null
+          codigo?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          email?: string | null
+          endereco_bairro?: string | null
+          endereco_cep?: string | null
+          endereco_cidade?: string | null
+          endereco_complemento?: string | null
+          endereco_logradouro?: string | null
+          endereco_numero?: string | null
+          endereco_uf?: string | null
+          id?: string | null
+          inscricao_estadual?: string | null
+          inscricao_municipal?: string | null
+          nome_fantasia?: string | null
+          razao_social?: string | null
+          status?: "ativo" | "inativo" | "suspenso" | null
+          telefone?: string | null
+        }
+        Relationships: []
+      }
+      perfis_usuarios: {
+        Row: {
+          atualizado_em: string | null
+          avatar_url: string | null
+          cargo: string | null
+          cliente_id: string | null
+          criado_em: string | null
+          criado_por: string | null
+          email: string | null
+          empresa_id: string | null
+          id: string | null
+          nome_completo: string | null
+          status: "ativo" | "inativo" | "suspenso" | null
+          telefone: string | null
+          user_id: string | null
+        }
+        Insert: {
+          atualizado_em?: string | null
+          avatar_url?: string | null
+          cargo?: string | null
+          cliente_id?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          email?: string | null
+          empresa_id?: string | null
+          id?: string | null
+          nome_completo?: string | null
+          status?: "ativo" | "inativo" | "suspenso" | null
+          telefone?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          atualizado_em?: string | null
+          avatar_url?: string | null
+          cargo?: string | null
+          cliente_id?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          email?: string | null
+          empresa_id?: string | null
+          id?: string | null
+          nome_completo?: string | null
+          status?: "ativo" | "inativo" | "suspenso" | null
+          telefone?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      usuarios_empresas: {
+        Row: {
+          ativo: boolean | null
+          atualizado_em: string | null
+          cliente_id: string | null
+          criado_em: string | null
+          criado_por: string | null
+          empresa_id: string | null
+          id: string | null
+          is_empresa_padrao: boolean | null
+          usuario_id: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          atualizado_em?: string | null
+          cliente_id?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          empresa_id?: string | null
+          id?: string | null
+          is_empresa_padrao?: boolean | null
+          usuario_id?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          atualizado_em?: string | null
+          cliente_id?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          empresa_id?: string | null
+          id?: string | null
+          is_empresa_padrao?: boolean | null
+          usuario_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_user_cliente_id: { Args: never; Returns: string }

@@ -24,6 +24,7 @@ interface UserRole {
 
 interface EmpresaVinculo {
   id: string;
+  usuario_id: string;
   empresa_id: string;
   cliente_id: string;
   is_empresa_padrao: boolean;
@@ -59,9 +60,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserContext = async (userId: string) => {
     try {
-      // Buscar perfil do usuário
+      // Buscar perfil do usuário via RPC ou view
       const { data: perfilData, error: perfilError } = await supabase
-        .from('perfis_usuarios')
+        .from('perfis_usuarios' as any)
         .select('*')
         .eq('user_id', userId)
         .single();
@@ -71,7 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      setPerfil(perfilData as PerfilUsuario);
+      setPerfil(perfilData as unknown as PerfilUsuario);
 
       // Buscar roles do usuário
       const { data: rolesData, error: rolesError } = await supabase
@@ -82,28 +83,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (rolesError) {
         console.error('Erro ao buscar roles:', rolesError);
       } else {
-        setRoles(rolesData as UserRole[]);
+        setRoles(rolesData as unknown as UserRole[]);
       }
 
       // Buscar empresas vinculadas
-      if (perfilData?.id) {
+      const perfilId = (perfilData as any)?.id;
+      if (perfilId) {
         const { data: empresasData, error: empresasError } = await supabase
-          .from('usuarios_empresas')
+          .from('usuarios_empresas' as any)
           .select('*')
-          .eq('usuario_id', perfilData.id)
+          .eq('usuario_id', perfilId)
           .eq('ativo', true);
 
         if (empresasError) {
           console.error('Erro ao buscar empresas:', empresasError);
         } else {
-          setEmpresasVinculadas(empresasData as EmpresaVinculo[]);
+          const empresas = empresasData as unknown as EmpresaVinculo[];
+          setEmpresasVinculadas(empresas);
           
           // Definir empresa padrão
-          const empresaPadrao = empresasData?.find((e: EmpresaVinculo) => e.is_empresa_padrao);
+          const empresaPadrao = empresas?.find((e) => e.is_empresa_padrao);
           if (empresaPadrao) {
             setEmpresaAtualState(empresaPadrao.empresa_id);
-          } else if (empresasData && empresasData.length > 0) {
-            setEmpresaAtualState(empresasData[0].empresa_id);
+          } else if (empresas && empresas.length > 0) {
+            setEmpresaAtualState(empresas[0].empresa_id);
           }
         }
       }
