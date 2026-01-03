@@ -321,6 +321,49 @@ export type Database = {
       }
     }
     Functions: {
+      check_access_permission: {
+        Args: {
+          p_operation?: string
+          p_schema_name: string
+          p_table_name: string
+        }
+        Returns: boolean
+      }
+      create_entity_data: {
+        Args: {
+          data_param?: Json
+          empresa_id_param?: string
+          schema_name: string
+          table_name: string
+        }
+        Returns: Json
+      }
+      delete_entity_data: {
+        Args: {
+          empresa_id_param?: string
+          id_param: string
+          schema_name: string
+          table_name: string
+        }
+        Returns: boolean
+      }
+      get_entity_data: {
+        Args: {
+          empresa_id_param?: string
+          filters?: Json
+          limit_param?: number
+          offset_param?: number
+          order_by?: string
+          order_direction?: string
+          schema_name: string
+          table_name: string
+        }
+        Returns: {
+          data: Json
+          id: string
+          total_count: number
+        }[]
+      }
       get_user_cliente_id: { Args: never; Returns: string }
       get_user_empresas: { Args: never; Returns: string[] }
       has_empresa_access: { Args: { p_empresa_id: string }; Returns: boolean }
@@ -333,6 +376,16 @@ export type Database = {
       }
       is_admin_cliente: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      update_entity_data: {
+        Args: {
+          data_param?: Json
+          empresa_id_param?: string
+          id_param: string
+          schema_name: string
+          table_name: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       app_role:
