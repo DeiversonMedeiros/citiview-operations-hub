@@ -61,6 +61,48 @@ export type Database = {
       }
     }
     Views: {
+      centro_de_custo: {
+        Row: {
+          ativo: boolean | null
+          atualizado_em: string | null
+          centro_pai_id: string | null
+          cliente_id: string | null
+          codigo: string | null
+          criado_em: string | null
+          criado_por: string | null
+          descricao: string | null
+          empresa_id: string | null
+          id: string | null
+          nome: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          atualizado_em?: string | null
+          centro_pai_id?: string | null
+          cliente_id?: string | null
+          codigo?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          descricao?: string | null
+          empresa_id?: string | null
+          id?: string | null
+          nome?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          atualizado_em?: string | null
+          centro_pai_id?: string | null
+          cliente_id?: string | null
+          codigo?: string | null
+          criado_em?: string | null
+          criado_por?: string | null
+          descricao?: string | null
+          empresa_id?: string | null
+          id?: string | null
+          nome?: string | null
+        }
+        Relationships: []
+      }
       clientes: {
         Row: {
           atualizado_em: string | null
@@ -199,51 +241,42 @@ export type Database = {
         }
         Relationships: []
       }
-      perfis_usuarios: {
+      perfis_de_acesso: {
         Row: {
+          ativo: boolean | null
           atualizado_em: string | null
-          avatar_url: string | null
-          cargo: string | null
           cliente_id: string | null
+          codigo: string | null
           criado_em: string | null
           criado_por: string | null
-          email: string | null
-          empresa_id: string | null
+          descricao: string | null
           id: string | null
-          nome_completo: string | null
-          status: "ativo" | "inativo" | "suspenso" | null
-          telefone: string | null
-          user_id: string | null
+          nome: string | null
+          permissoes: Json | null
         }
         Insert: {
+          ativo?: boolean | null
           atualizado_em?: string | null
-          avatar_url?: string | null
-          cargo?: string | null
           cliente_id?: string | null
+          codigo?: string | null
           criado_em?: string | null
           criado_por?: string | null
-          email?: string | null
-          empresa_id?: string | null
+          descricao?: string | null
           id?: string | null
-          nome_completo?: string | null
-          status?: "ativo" | "inativo" | "suspenso" | null
-          telefone?: string | null
-          user_id?: string | null
+          nome?: string | null
+          permissoes?: Json | null
         }
         Update: {
+          ativo?: boolean | null
           atualizado_em?: string | null
-          avatar_url?: string | null
-          cargo?: string | null
           cliente_id?: string | null
+          codigo?: string | null
           criado_em?: string | null
           criado_por?: string | null
-          email?: string | null
-          empresa_id?: string | null
+          descricao?: string | null
           id?: string | null
-          nome_completo?: string | null
-          status?: "ativo" | "inativo" | "suspenso" | null
-          telefone?: string | null
-          user_id?: string | null
+          nome?: string | null
+          permissoes?: Json | null
         }
         Relationships: []
       }
@@ -257,6 +290,7 @@ export type Database = {
           empresa_id: string | null
           id: string | null
           is_empresa_padrao: boolean | null
+          perfil_acesso_id: string | null
           usuario_id: string | null
         }
         Insert: {
@@ -268,6 +302,7 @@ export type Database = {
           empresa_id?: string | null
           id?: string | null
           is_empresa_padrao?: boolean | null
+          perfil_acesso_id?: string | null
           usuario_id?: string | null
         }
         Update: {
@@ -279,6 +314,7 @@ export type Database = {
           empresa_id?: string | null
           id?: string | null
           is_empresa_padrao?: boolean | null
+          perfil_acesso_id?: string | null
           usuario_id?: string | null
         }
         Relationships: []
