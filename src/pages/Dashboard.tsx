@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Building2, Users, Briefcase, LogOut, Settings } from 'lucide-react';
 
 const Dashboard = () => {
-  const { user, perfil, roles, empresasVinculadas, signOut, isSuperAdmin, isAdminCliente } = useAuth();
+  const { user, usuario, roles, empresasVinculadas, signOut, isSuperAdmin, isAdminCliente } = useAuth();
 
   return (
     <div className="min-h-screen bg-background">
@@ -23,7 +23,7 @@ const Dashboard = () => {
           
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-sm font-medium text-foreground">{perfil?.nome_completo || user?.email}</p>
+              <p className="text-sm font-medium text-foreground">{usuario?.nome_completo || user?.email}</p>
               <p className="text-xs text-muted-foreground">
                 {roles.map(r => r.role).join(', ') || 'Sem papel definido'}
               </p>
@@ -52,10 +52,10 @@ const Dashboard = () => {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{perfil?.nome_completo || 'N/A'}</div>
-              <p className="text-xs text-muted-foreground">{perfil?.email}</p>
+              <div className="text-2xl font-bold">{usuario?.nome_completo || 'N/A'}</div>
+              <p className="text-xs text-muted-foreground">{usuario?.email}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Status: <span className="text-primary">{perfil?.status || 'N/A'}</span>
+                Status: <span className="text-primary">{usuario?.status || 'N/A'}</span>
               </p>
             </CardContent>
           </Card>

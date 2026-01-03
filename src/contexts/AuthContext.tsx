@@ -2,11 +2,10 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-interface PerfilUsuario {
+interface Usuario {
   id: string;
   user_id: string;
   cliente_id: string;
-  empresa_id: string | null;
   nome_completo: string;
   email: string;
   telefone: string | null;
@@ -27,6 +26,7 @@ interface EmpresaVinculo {
   usuario_id: string;
   empresa_id: string;
   cliente_id: string;
+  perfil_acesso_id: string | null;
   is_empresa_padrao: boolean;
   ativo: boolean;
 }
@@ -34,10 +34,11 @@ interface EmpresaVinculo {
 interface AuthContextType {
   user: User | null;
   session: Session | null;
-  perfil: PerfilUsuario | null;
+  usuario: Usuario | null;
   roles: UserRole[];
   empresasVinculadas: EmpresaVinculo[];
   empresaAtual: string | null;
+  clienteId: string | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -52,53 +53,53 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [perfil, setPerfil] = useState<PerfilUsuario | null>(null);
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [roles, setRoles] = useState<UserRole[]>([]);
   const [empresasVinculadas, setEmpresasVinculadas] = useState<EmpresaVinculo[]>([]);
   const [empresaAtual, setEmpresaAtualState] = useState<string | null>(null);
+  const [clienteId, setClienteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchUserContext = async (userId: string) => {
     try {
-      // Buscar perfil do usuário via RPC ou view
-      const { data: perfilData, error: perfilError } = await supabase
-        .from('perfis_usuarios' as any)
-        .select('*')
-        .eq('user_id', userId)
-        .single();
+      // Buscar usuario via RPC get_entity_data
+      const { data: usuarioData, error: usuarioError } = await supabase.rpc(
+        'get_entity_data',
+        {
+          schema_name: 'core',
+          table_name: 'usuarios',
+          filters: { user_id: userId },
+          limit_param: 1,
+          offset_param: 0
+        }
+      );
 
-      if (perfilError) {
-        console.error('Erro ao buscar perfil:', perfilError);
+      if (usuarioError) {
+        console.error('Erro ao buscar usuário:', usuarioError);
         return;
       }
 
-      setPerfil(perfilData as unknown as PerfilUsuario);
+      if (usuarioData && usuarioData.length > 0) {
+        const usuarioInfo = usuarioData[0].data as unknown as Usuario;
+        setUsuario(usuarioInfo);
+        setClienteId(usuarioInfo.cliente_id);
 
-      // Buscar roles do usuário
-      const { data: rolesData, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('*')
-        .eq('user_id', userId);
-
-      if (rolesError) {
-        console.error('Erro ao buscar roles:', rolesError);
-      } else {
-        setRoles(rolesData as unknown as UserRole[]);
-      }
-
-      // Buscar empresas vinculadas
-      const perfilId = (perfilData as any)?.id;
-      if (perfilId) {
-        const { data: empresasData, error: empresasError } = await supabase
-          .from('usuarios_empresas' as any)
-          .select('*')
-          .eq('usuario_id', perfilId)
-          .eq('ativo', true);
+        // Buscar empresas vinculadas via RPC
+        const { data: empresasData, error: empresasError } = await supabase.rpc(
+          'get_entity_data',
+          {
+            schema_name: 'core',
+            table_name: 'usuarios_empresas',
+            filters: { usuario_id: usuarioInfo.id, ativo: true },
+            limit_param: 100,
+            offset_param: 0
+          }
+        );
 
         if (empresasError) {
           console.error('Erro ao buscar empresas:', empresasError);
-        } else {
-          const empresas = empresasData as unknown as EmpresaVinculo[];
+        } else if (empresasData) {
+          const empresas = empresasData.map((e: any) => e.data) as unknown as EmpresaVinculo[];
           setEmpresasVinculadas(empresas);
           
           // Definir empresa padrão
@@ -109,6 +110,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setEmpresaAtualState(empresas[0].empresa_id);
           }
         }
+      }
+
+      // Buscar roles do usuário (tabela public.user_roles ainda é acessível diretamente)
+      const { data: rolesData, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('*')
+        .eq('user_id', userId);
+
+      if (rolesError) {
+        console.error('Erro ao buscar roles:', rolesError);
+      } else {
+        setRoles(rolesData as unknown as UserRole[]);
       }
     } catch (error) {
       console.error('Erro ao carregar contexto do usuário:', error);
@@ -128,10 +141,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             fetchUserContext(session.user.id);
           }, 0);
         } else {
-          setPerfil(null);
+          setUsuario(null);
           setRoles([]);
           setEmpresasVinculadas([]);
           setEmpresaAtualState(null);
+          setClienteId(null);
         }
         
         setLoading(false);
@@ -163,10 +177,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    setPerfil(null);
+    setUsuario(null);
     setRoles([]);
     setEmpresasVinculadas([]);
     setEmpresaAtualState(null);
+    setClienteId(null);
   };
 
   const setEmpresaAtual = (empresaId: string) => {
@@ -189,10 +204,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         session,
-        perfil,
+        usuario,
         roles,
         empresasVinculadas,
         empresaAtual,
+        clienteId,
         loading,
         signIn,
         signOut,
