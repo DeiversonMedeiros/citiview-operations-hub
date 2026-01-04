@@ -2,9 +2,19 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building2, Users, Briefcase, LogOut, Settings } from 'lucide-react';
+import EmpresaSelector from '@/components/EmpresaSelector';
 
 const Dashboard = () => {
-  const { user, usuario, roles, empresasVinculadas, signOut, isSuperAdmin, isAdminCliente } = useAuth();
+  const { 
+    user, 
+    usuario, 
+    roles, 
+    empresasVinculadas, 
+    empresaAtual,
+    signOut, 
+    isSuperAdmin, 
+    isAdminCliente 
+  } = useAuth();
 
   return (
     <div className="min-h-screen bg-background">
@@ -19,6 +29,11 @@ const Dashboard = () => {
               <h1 className="text-xl font-bold text-foreground">CitiView</h1>
               <p className="text-xs text-muted-foreground">ERP O&M Infraestrutura</p>
             </div>
+          </div>
+
+          {/* Seletor de Empresa */}
+          <div className="flex-1 flex justify-center px-8">
+            <EmpresaSelector />
           </div>
           
           <div className="flex items-center gap-4">
@@ -62,11 +77,17 @@ const Dashboard = () => {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Empresas Vinculadas</CardTitle>
+              <CardTitle className="text-sm font-medium">Empresa Ativa</CardTitle>
               <Briefcase className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{empresasVinculadas.length}</div>
+              <div className="text-2xl font-bold">
+                {empresaAtual ? (
+                  <span className="text-primary">Selecionada</span>
+                ) : (
+                  <span className="text-muted-foreground">Nenhuma</span>
+                )}
+              </div>
               <p className="text-xs text-muted-foreground">
                 {empresasVinculadas.length === 0 
                   ? 'Nenhuma empresa vinculada'
@@ -97,30 +118,30 @@ const Dashboard = () => {
         {/* Info Card */}
         <Card className="border-dashed">
           <CardHeader>
-            <CardTitle>Estrutura de Autenticação</CardTitle>
+            <CardTitle>Contexto Ativo</CardTitle>
             <CardDescription>
-              Sistema multi-tenant com isolamento por cliente e empresa
+              Todas as operações respeitam a empresa selecionada
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="p-4 rounded-lg bg-muted/50">
-                <h4 className="font-semibold mb-2">Fluxo de Login</h4>
+                <h4 className="font-semibold mb-2">Fluxo de Empresa Ativa</h4>
                 <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
-                  <li>Usuário entra com email/senha</li>
-                  <li>Supabase Auth valida credenciais</li>
-                  <li>Sistema carrega perfil do usuário</li>
-                  <li>Sistema carrega roles e empresas</li>
-                  <li>Contexto fica disponível na aplicação</li>
+                  <li>Login realizado com sucesso</li>
+                  <li>Sistema carrega empresas vinculadas</li>
+                  <li>Empresa padrão ou última ativa é selecionada</li>
+                  <li>Troca de empresa atualiza todos os dados</li>
+                  <li>Seleção persiste na sessão do navegador</li>
                 </ol>
               </div>
               <div className="p-4 rounded-lg bg-muted/50">
-                <h4 className="font-semibold mb-2">Contexto do Usuário</h4>
+                <h4 className="font-semibold mb-2">Segurança Multi-Tenant</h4>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• <strong>Perfil:</strong> Dados do usuário no domínio</li>
-                  <li>• <strong>Roles:</strong> Papéis de acesso (RBAC)</li>
-                  <li>• <strong>Empresas:</strong> Vínculos ativos</li>
-                  <li>• <strong>Empresa Atual:</strong> Contexto selecionado</li>
+                  <li>• <strong>Cliente:</strong> Isolamento total por cliente_id</li>
+                  <li>• <strong>Empresa:</strong> Filtro por empresa_id</li>
+                  <li>• <strong>RLS:</strong> Políticas no banco garantem segurança</li>
+                  <li>• <strong>Frontend:</strong> Contexto global sincronizado</li>
                 </ul>
               </div>
             </div>
